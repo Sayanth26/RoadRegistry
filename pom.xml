@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>au.edu.rmit.sct</groupId> <!-- Convention is the reverse domain name -->
+    <artifactId>numbers</artifactId> <!-- Name of the project -->
+    <version>0.1.0-SNAPSHOT</version> <!-- Version of the project -->
+
+    <properties>
+        <!-- Java version -->
+        <maven.compiler.release>21</maven.compiler.release>
+        <junit.version>5.12.2</junit.version>
+    </properties>
+
+    <dependencies>
+        <!-- JUnit 5 Dependency -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope> <!-- Test scope means it is only used for testing -->
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope> <!-- Test scope means it is only used for testing -->
+        </dependency>
+    </dependencies>
+    
+    <build>
+        <plugins>
+            <!-- Lets use the latest version of the compiler plugin
+            https://maven.apache.org/plugins/maven-compiler-plugin/index.html
+             -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.14.0</version>
+            </plugin>
+            <plugin>
+                <!-- We need the maven surefire plugin to run the unit tests
+                https://maven.apache.org/surefire/maven-surefire-plugin/index.html
+                 -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.3</version>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
