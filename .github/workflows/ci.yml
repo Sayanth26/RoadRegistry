@@ -1,34 +1,43 @@
-name: GitHub Actions Java test workflow # Workflow name
-run-name: Running tests on github actions
-on: [push] # Trigger the workflow on push events
+name: Java CI with Maven              # You can choose any descriptive name. 
+                                      # "Java CI with Maven" is conventional.
+
+# Only trigger on pushes (and optionally PRs) to master.
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
 jobs:
-  java-test: # Job name
-    runs-on: ubuntu-latest # Configures the job to run on the latest version of an Ubuntu Linux runner.  
+  java-test:                         # A single job that builds and tests your code
+    runs-on: ubuntu-latest           # Use the latest Ubuntu runner
+
     steps:
-      - name: Check out repository code
+      - name: Check out repository    # Step 1: checkout your code
         uses: actions/checkout@v4
-        # The uses keyword specifies that this step will run v4 of the actions/checkout action. 
-        # This is an action that checks out your repository onto the runner,
-        #  allowing you to run scripts or other actions against your code (such as build and test tools). 
-        # You should use the checkout action any time your workflow will use the repository's code.
-      
-      - name: Setup java # Install Java on the runner
+
+      - name: Set up Java 21          # Step 2: install JDK 21 (matches your pom.xml)
         uses: actions/setup-java@v4
         with:
-          distribution: 'adopt'
-          # The distribution of Java to install. In this case, it specifies the AdoptOpenJDK distribution. 
-          # See https://github.com/actions/setup-java?tab=readme-ov-file#supported-distributions for supported distributions.
-          java-version: '21'  # The version of Java to install in the job runner.
+          distribution: 'adopt'       # AdoptOpenJDK (Temurin) distribution
+          java-version: '21'          # Match this to your <maven.compiler.release>21</maven.compiler.release>
 
-      - name: Run tests
-        run: mvn test 
-        # This step runs the command mvn test, which is a Maven command to run the tests in your project.
-        # Maven is a build automation tool used primarily for Java projects. 
-        # The tests are defined in your project's source code and will be executed by Maven.
+      - name: Cache Maven dependencies # Step 3 (optional but recommended)
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
 
-  another-job:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository code
-        run: ls -la
-        
+      - name: Build and run tests      # Step 4: run Maven’s test goal
+        run: mvn --batch-mode --update-snapshots test
+
+# Remove or repurpose this job unless you specifically need another shell command.
+# If you don’t need it, feel free to delete “another-job” entirely.
+# 
+# another-job:
+#   runs-on: ubuntu-latest
+#   steps:
+#     - name: Check out repository code
+#       run: ls -la
